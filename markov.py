@@ -1,3 +1,4 @@
+import random
 from random import choice
 
 
@@ -30,7 +31,7 @@ def make_chains(text_string):
     """
 
     chains = {}
-    word_pair_tuples = []
+  
     for word in text_string:
         words = text_string.split()
 
@@ -41,10 +42,11 @@ def make_chains(text_string):
         else:
             chains[(words[i], words[i + 1])].append(words[i + 2])
 
-    print chains
-
-
-    # your code goes here
+    # Checking the last two words.  If not in dictionary, a
+    if (words[-2], words[-1]) not in chains:
+        chains[(words[-2], words[-1])] = [None]
+    else:
+        chains[(words[-2], words[-1])].append(None)
 
     return chains
 
@@ -52,11 +54,46 @@ def make_chains(text_string):
 def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
-    text = ""
+    text_list = []
 
     # your code goes here
+ 
+    #text = text + " ".join(random.choice(chains))
+    
 
-    return text
+    generated_key = random.choice(chains.keys())
+    text_list.extend(list(generated_key))
+    first_word, second_word = generated_key[0], generated_key[1]
+    next_word = random.choice(chains[generated_key])
+    
+
+    while next_word:
+        text_list.append(next_word)
+
+        first_word = second_word
+        second_word = next_word
+        
+        next_pair = (first_word, second_word)
+
+        next_word = random.choice(chains[next_pair])
+              
+    print text_list
+
+    print " ".join(text_list)
+
+
+    # first_gen_key = random.choice(chains.keys())
+    # next_word = random.choice(chains[first_gen_key])
+    # first_word, second_word = first_gen_key[0], first_gen_key[1]
+    # text = first_word + " " + second_word + " " + next_word
+
+
+    # print text
+    # print first_gen_key
+    # print next_word
+    # print first_word
+    # print second_word
+    # return text
 
 
 input_path = "green-eggs.txt"

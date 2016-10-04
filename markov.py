@@ -1,5 +1,10 @@
+import sys
 import random
 from random import choice
+
+file_path = sys.argv[1]
+
+
 
 
 def open_and_read_file(file_path):

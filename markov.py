@@ -60,13 +60,27 @@ def make_text(chains, n_gram=2):
     text_list = []
 
     #try putting this block into while loop
+
     generated_key = random.choice(chains.keys())
-    text_list.extend(list(generated_key))
+
+    while True:
+        if generated_key[0].istitle():
+            text_list.extend(list(generated_key))
+            # print text_list
+            break
+        else:
+            generated_key = random.choice(chains.keys())
+            # print generated_key
+
+    
     previous_words = generated_key[-(n_gram-1):]
     next_word = random.choice(chains[generated_key])
 
 
     while next_word:
+        if next_word[-1] in [".", "?", "!"]:
+            text_list.append(next_word)
+            break
         text_list.append(next_word)
         next_group = tuple(text_list[-n_gram:])
         next_word = random.choice(chains[next_group])
@@ -77,7 +91,7 @@ def make_text(chains, n_gram=2):
 
 input_path = sys.argv[1]
 
-n_gram = int(raw_input("What size n-gram would you like to use? >"))
+n_gram = int(raw_input("What size n-gram would you like to use? > "))
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
@@ -85,7 +99,7 @@ input_text = open_and_read_file(input_path)
 # Get a Markov chain
 chains = make_chains(input_text, n_gram)
 
-print chains
+# print chains
 
 # Produce random text
 random_text = make_text(chains, n_gram)

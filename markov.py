@@ -2,10 +2,6 @@ import sys
 import random
 from random import choice
 
-file_path = sys.argv[1]
-
-
-
 
 def open_and_read_file(file_path):
 
@@ -15,7 +11,6 @@ def open_and_read_file(file_path):
     the file's contents as one string of text.
     """
 
-    # your code goes here
     poem_string = open(file_path).read()
 
 
@@ -40,18 +35,21 @@ def make_chains(text_string):
     for word in text_string:
         words = text_string.split()
 
-    
-    for i in range(len(words) - 2):
-        if (words[i], words[i + 1]) not in chains:
-            chains[(words[i], words[i + 1])] = [words[i + 2]]
+    n_gram = int(raw_input("What size n-gram would you like to use? >"))
+
+    #Looping over the text and making dictionary of tuples and lists
+    for i in range(len(words) - n_gram):
+        #  
+        if tuple(words[i:i + n_gram]) not in chains:
+            chains[tuple(words[i:i + n_gram])] = [words[i + n_gram]]
         else:
-            chains[(words[i], words[i + 1])].append(words[i + 2])
+            chains[tuple(words[i:i + n_gram])].append(words[i + n_gram])
 
     # Checking the last two words.  If not in dictionary, a
-    if (words[-2], words[-1]) not in chains:
-        chains[(words[-2], words[-1])] = [None]
+    if tuple(words[-n_gram:]) not in chains:
+        chains[tuple(words[-n_gram:])] = [None]
     else:
-        chains[(words[-2], words[-1])].append(None)
+        chains[tuple(words[-n_gram:])].append(None)
 
     return chains
 
@@ -60,11 +58,6 @@ def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
     text_list = []
-
-    # your code goes here
- 
-    #text = text + " ".join(random.choice(chains))
-    
 
     generated_key = random.choice(chains.keys())
     text_list.extend(list(generated_key))
@@ -81,27 +74,12 @@ def make_text(chains):
         next_pair = (first_word, second_word)
 
         next_word = random.choice(chains[next_pair])
-              
-    print text_list
 
     print " ".join(text_list)
 
 
-    # first_gen_key = random.choice(chains.keys())
-    # next_word = random.choice(chains[first_gen_key])
-    # first_word, second_word = first_gen_key[0], first_gen_key[1]
-    # text = first_word + " " + second_word + " " + next_word
 
-
-    # print text
-    # print first_gen_key
-    # print next_word
-    # print first_word
-    # print second_word
-    # return text
-
-
-input_path = "green-eggs.txt"
+input_path = sys.argv[1]
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
@@ -111,5 +89,3 @@ chains = make_chains(input_text)
 
 # Produce random text
 random_text = make_text(chains)
-
-print random_text

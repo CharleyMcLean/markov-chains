@@ -3,6 +3,8 @@ import random
 from random import choice
 
 
+
+
 def open_and_read_file(file_path):
 
     """Takes file path as string; returns text as string.
@@ -10,14 +12,14 @@ def open_and_read_file(file_path):
     Takes a string that is a file path, opens the file, and turns
     the file's contents as one string of text.
     """
+    #for files in sys.argv[1:]:
+        # open(files).read()
 
-    poem_string = open(file_path).read()
+    return open(file_path).read()
 
 
-    return poem_string
 
-
-def make_chains(text_string, n_gram=2):
+def make_chains(text_string, chains, n_gram=2):
     """Takes input text as string; returns _dictionary_ of markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -29,8 +31,9 @@ def make_chains(text_string, n_gram=2):
         >>> make_chains("hi there mary hi there juanita")
         {('hi', 'there'): ['mary', 'juanita'], ('there', 'mary'): ['hi'], ('mary', 'hi': ['there']}
     """
-
-    chains = {}
+    # Added in chains as a parameter so we can pass in multiple chain dictionaries.
+    # Don't return at end when using chains as a paramenter.
+    # chains = {}
     
     words = text_string.split()
 
@@ -51,15 +54,13 @@ def make_chains(text_string, n_gram=2):
     else:
         chains[tuple(words[-n_gram:])].append(None)
 
-    return chains
+    # return chains
 
 
 def make_text(chains, n_gram=2):
     """Takes dictionary of markov chains; returns random text."""
 
     text_list = []
-
-    #try putting this block into while loop
 
     generated_key = random.choice(chains.keys())
 
@@ -90,16 +91,25 @@ def make_text(chains, n_gram=2):
 
 
 input_path = sys.argv[1]
+another_input_path = sys.argv[2]
 
 n_gram = int(raw_input("What size n-gram would you like to use? > "))
 
 # Open the file and turn it into one long string
-input_text = open_and_read_file(input_path)
+input_text_1 = open_and_read_file(input_path)
+input_text_2 = open_and_read_file(another_input_path)
 
 # Get a Markov chain
-chains = make_chains(input_text, n_gram)
+chains = {}
+chains_1 = make_chains(input_text_1, chains, n_gram)
+chains_2 = make_chains(input_text_2, chains, n_gram)
+
+print chains_1
+print chains_2
 
 # print chains
 
 # Produce random text
 random_text = make_text(chains, n_gram)
+
+# Check out .update for dictionaries
